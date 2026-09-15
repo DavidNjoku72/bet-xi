@@ -27,3 +27,43 @@ V1 Requirements
 - Actual player statistics can be entered after matches.
 - The application marks predictions as correct or incorrect.
 - The application gives the XI a score out of 11.
+
+## Data Design
+
+### Gameweek
+- id
+- gameweekNumber
+- startDate
+- endDate
+
+### Match
+- id
+- homeTeam
+- awayTeam
+- kickoffTime
+- gameweek
+
+### Team
+- id
+- name
+
+### Player
+- id
+- name
+- position
+- team
+
+### Lineup
+- id
+- gameweek
+- picks
+- score
+
+### Pick
+- id
+- player
+- statistic
+- line
+- prediction
+- actualValue
+- result
