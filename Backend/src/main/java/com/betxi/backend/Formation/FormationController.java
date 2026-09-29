@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/formations")
 public class FormationController {
 
@@ -28,7 +29,9 @@ public class FormationController {
             @RequestParam int forwards) {
 
         if (goalkeepers + defenders + midfielders + forwards != 11) {
-            throw new RuntimeException("A formation must contain exactly 11 players");
+            throw new RuntimeException(
+                    "A formation must contain exactly 11 players"
+            );
         }
 
         Formation formation = new Formation(

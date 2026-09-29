@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/lineups")
 public class LineupController {
 
@@ -32,11 +33,13 @@ public class LineupController {
         this.formationRepository = formationRepository;
     }
 
+    // Get all lineups
     @GetMapping
     public List<Lineup> getAllLineups() {
         return lineupRepository.findAll();
     }
 
+    // Create a new lineup for a gameweek using a chosen formation
     @PostMapping
     public Lineup createLineup(
             @RequestParam Long gameweekId,
@@ -53,6 +56,7 @@ public class LineupController {
         return lineupRepository.save(lineup);
     }
 
+    // Add a pick to a lineup
     @PostMapping("/{lineupId}/picks/{pickId}")
     public Lineup addPick(
             @PathVariable Long lineupId,
@@ -65,6 +69,30 @@ public class LineupController {
                 .orElseThrow(() -> new RuntimeException("Pick not found"));
 
         lineup.addPick(pick);
+
+        return lineupRepository.save(lineup);
+    }
+
+    // Submit and lock a completed lineup
+    @PutMapping("/{lineupId}/submit")
+    public Lineup submitLineup(@PathVariable Long lineupId) {
+
+        Lineup lineup = lineupRepository.findById(lineupId)
+                .orElseThrow(() -> new RuntimeException("Lineup not found"));
+
+        lineup.submit();
+
+        return lineupRepository.save(lineup);
+    }
+
+    // Recalculate the score using settled picks
+    @PutMapping("/{lineupId}/score")
+    public Lineup calculateScore(@PathVariable Long lineupId) {
+
+        Lineup lineup = lineupRepository.findById(lineupId)
+                .orElseThrow(() -> new RuntimeException("Lineup not found"));
+
+        lineup.calculateScore();
 
         return lineupRepository.save(lineup);
     }
